@@ -3,20 +3,12 @@ import Vuex from 'vuex';
 
 Vue.use(Vuex);
 
-const state = {
-
-}
-
-const mutations = {
-
-}
-
-const actions = {
-
-}
+import home from './home';
+import search from './search';
 
 export default new Vuex.Store({
-  state,
-  mutations,
-  actions
+  modules: {
+    home,
+    search
+  }
 });

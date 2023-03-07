@@ -12,19 +12,32 @@ import Register from '@/pages/Register';
 export default new VueRouter({
   routes: [{
       path: '/home',
-      component: Home
+      component: Home,
+      meta: {
+        show: true
+      }
     },
     {
       path: '/search',
-      component: Search
+      name: 'search',
+      component: Search,
+      meta: {
+        show: true
+      }
     },
     {
       path: '/login',
-      component: Login
+      component: Login,
+      meta: {
+        show: false
+      }
     },
     {
       path: '/register',
-      component: Register
+      component: Register,
+      meta: {
+        show: false
+      }
     },
     {
       path: '/',
