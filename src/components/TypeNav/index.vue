@@ -74,6 +74,7 @@ export default {
       }
     },
     goSearch(event) {
+      // 判斷event.target身上有沒有data-categoryname的屬性，有就代表是a標籤，也就是可以允許跳轉路由
       let {categoryname: categoryName, categoryid: categoryId } =  event.target.dataset;
       if(categoryName) {
         let location = {
@@ -83,6 +84,7 @@ export default {
             categoryName
           }
         };
+        location.params = this.$route.params;
         this.$router.push(location);
       }
     },
@@ -96,7 +98,6 @@ export default {
     if(this.$route.path !== '/home') {
       this.show = false;
     }
-
   }
 };
 </script>

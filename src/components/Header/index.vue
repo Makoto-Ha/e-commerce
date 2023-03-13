@@ -32,7 +32,7 @@
       </h1>
       <div class="searchArea">
         <form action="###" class="searchForm">
-          <input type="text" id="autocomplete" class="input-error input-xxlarge" />
+          <input ref="searchInput" type="text" id="autocomplete" class="input-error input-xxlarge" />
           <button class="sui-btn btn-xlarge btn-danger" type="button" @click="goSearch">搜索</button>
         </form>
       </div>
@@ -43,9 +43,19 @@
 <script>
   export default {
     name: 'Header',
+    data() {
+      return {
+        keyword: ''
+      }
+    },
     methods: {
       goSearch() {
-        this.$router.push('/search');
+        this.keyword = this.$refs.searchInput.value;
+        this.$router.push({
+          name: 'search',
+          params: {keyword: this.keyword || undefined},
+          query: this.$route.query
+        });
       }
     }
   };

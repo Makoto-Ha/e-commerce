@@ -16,6 +16,7 @@ export default {
     Footer
   },
   mounted() {
+    // 發送請求API到vuex狀態裡，因為APP不會被銷毀，只會掛載一次，適合發送API
     this.$store.dispatch('categoryList');
   }
 };
