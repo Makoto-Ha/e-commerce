@@ -9,17 +9,17 @@
             <div class="all-sort-list2">
               <div class="item" v-for="(c1, index) in categoryList" :key="c1.categoryId" :class="{cur: currentIndex === index}">
                 <h3 @mouseenter="changeIndex(index)">
-                  <a :data-categoryname="c1.categoryName" :data-categoryid="c1.categoryId">{{ c1.categoryName }}</a>
+                  <a :data-categoryname="c1.categoryName" :data-category1Id="c1.categoryId">{{ c1.categoryName }}</a>
                 </h3>
                 <div class="item-list clearfix" :style="{display: currentIndex === index ? 'block' : 'none'}">
                   <div class="subitem" v-for="c2 in c1.categoryChild" :key="c2.categoryId">
                     <dl class="fore">
                       <dt>
-                        <a :data-categoryname="c2.categoryName" :data-categoryid="c2.categoryId">{{ c2.categoryName }}</a>
+                        <a :data-categoryname="c2.categoryName" :data-category2Id="c2.categoryId">{{ c2.categoryName }}</a>
                       </dt>
                       <dd>
                         <em v-for="c3 in c2.categoryChild" :key="c3.categoryId">
-                          <a :data-categoryname="c2.categoryName" :data-categoryid="c3.categoryId">{{ c3.categoryName }}</a>
+                          <a :data-categoryname="c3.categoryName" :data-category3Id="c3.categoryId">{{ c3.categoryName }}</a>
                         </em>
                       </dd>
                     </dl>
@@ -75,14 +75,19 @@ export default {
     },
     goSearch(event) {
       // 判斷event.target身上有沒有data-categoryname的屬性，有就代表是a標籤，也就是可以允許跳轉路由
-      let {categoryname: categoryName, categoryid: categoryId } =  event.target.dataset;
+      let {categoryname: categoryName, category1id, category2id, category3id } =  event.target.dataset;
       if(categoryName) {
+        let query = {categoryName};
+        if(category1id) {
+          query.category1Id = category1id;
+        }else if(category2id) {
+          query.category2Id = category2id;
+        }else if(category3id) {
+          query.category3Id = category3id;
+        }
         let location = {
-          name: 'search', 
-          query: {
-            categoryId,
-            categoryName
-          }
+          name: 'search',
+          query
         };
         location.params = this.$route.params;
         this.$router.push(location);

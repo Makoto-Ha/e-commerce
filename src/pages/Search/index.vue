@@ -11,15 +11,14 @@
             </li>
           </ul>
           <ul class="fl sui-tag">
-            <li class="with-x">手机</li>
-            <li class="with-x">iphone<i>×</i></li>
-            <li class="with-x">华为<i>×</i></li>
-            <li class="with-x">OPPO<i>×</i></li>
+            <li class="with-x" v-if="searchParams.categoryName">{{ searchParams.categoryName }}<i @click="removeCategoryName">x</i></li>
+            <li class="with-x" v-if="searchParams.keyword">{{ searchParams.keyword }}<i @click="removeKeyword">x</i></li>
+            <li class="with-x" v-if="searchParams.trademark">{{ searchParams.trademark.split(':')[1] }}<i @click="removeTrademark">x</i></li>
           </ul>
         </div>
 
         <!--selector-->
-        <SearchSelector />
+        <SearchSelector @trademarkInfo="trademarkInfo"/>
 
         <!--details-->
         <div class="details clearfix">
@@ -143,6 +142,32 @@
     methods: {
       getData() {
         this.$store.dispatch('getSearchList', this.searchParams);
+      },
+      removeCategoryName() {
+        this.searchParams.categoryName = undefined;
+        this.$router.push({name: 'search', params: this.$route.params});
+      },
+      removeKeyword() { 
+        this.searchParams.keyword = undefined;
+        this.$bus.$emit('clearKeyword');
+        this.$router.push({name: 'search', query: this.$route.query});
+      },
+      trademarkInfo(trademark) {
+        this.searchParams.trademark = `${trademark.tmId}: ${trademark.tmName}`; 
+        this.getData();
+      },
+      removeTrademark() {
+        this.searchParams.trademark = undefined;
+        this.getData();
+      }
+    },
+    watch: {
+      $route(newValue, oldValue) {
+        this.searchParams.category1Id = undefined;
+        this.searchParams.category2Id = undefined;
+        this.searchParams.category3Id = undefined;
+        Object.assign(this.searchParams, this.$route.query, this.$route.params);
+        this.getData();
       }
     },
     beforeMount() {
@@ -150,6 +175,7 @@
     },
     mounted() {
       this.getData();
+      this.$on('trademarkInfo', this.trademarkInfo);
     }
   }
 </script>
