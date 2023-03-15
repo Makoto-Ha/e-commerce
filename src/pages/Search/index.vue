@@ -14,34 +14,29 @@
             <li class="with-x" v-if="searchParams.categoryName">{{ searchParams.categoryName }}<i @click="removeCategoryName">x</i></li>
             <li class="with-x" v-if="searchParams.keyword">{{ searchParams.keyword }}<i @click="removeKeyword">x</i></li>
             <li class="with-x" v-if="searchParams.trademark">{{ searchParams.trademark.split(':')[1] }}<i @click="removeTrademark">x</i></li>
+            <li class="with-x" v-for="(prop, index) in searchParams.props" :key="index">{{ prop.split(':')[1] }}<i @click="removeAttr(index)">x</i></li>
           </ul>
         </div>
 
         <!--selector-->
-        <SearchSelector @trademarkInfo="trademarkInfo"/>
+        <SearchSelector @trademarkInfo="trademarkInfo" @attrInfo="attrInfo"/>
 
         <!--details-->
         <div class="details clearfix">
           <div class="sui-navbar">
             <div class="navbar-inner filter">
               <ul class="sui-nav">
-                <li class="active">
-                  <a href="#">综合</a>
+                <li :class="{active: isOne}" @click="changeOrder('1')">
+                  <a>
+                    综合
+                    <span v-show="isOne">{{ isDesc ? '⬇' : '⬆'}}</span>
+                  </a>
                 </li>
-                <li>
-                  <a href="#">销量</a>
-                </li>
-                <li>
-                  <a href="#">新品</a>
-                </li>
-                <li>
-                  <a href="#">评价</a>
-                </li>
-                <li>
-                  <a href="#">价格⬆</a>
-                </li>
-                <li>
-                  <a href="#">价格⬇</a>
+                <li :class="{active: isTwo}" @click="changeOrder('2')">
+                  <a>
+                    价格
+                    <span v-show="isTwo">{{ isDesc ?  '⬇' : '⬆'}}</span>
+                  </a>
                 </li>
               </ul>
             </div>
@@ -77,35 +72,7 @@
 
             </ul>
           </div>
-          <div class="fr page">
-            <div class="sui-pagination clearfix">
-              <ul>
-                <li class="prev disabled">
-                  <a href="#">«上一页</a>
-                </li>
-                <li class="active">
-                  <a href="#">1</a>
-                </li>
-                <li>
-                  <a href="#">2</a>
-                </li>
-                <li>
-                  <a href="#">3</a>
-                </li>
-                <li>
-                  <a href="#">4</a>
-                </li>
-                <li>
-                  <a href="#">5</a>
-                </li>
-                <li class="dotted"><span>...</span></li>
-                <li class="next">
-                  <a href="#">下一页»</a>
-                </li>
-              </ul>
-              <div><span>共10页&nbsp;</span></div>
-            </div>
-          </div>
+          <Pagination/>
         </div>
       </div>
     </div>
@@ -128,7 +95,7 @@
           category3Id: '',
           categoryName: '',
           keyword: '',
-          order: '',
+          order: '1:asc',
           pageNo: 1,
           pageSize: 10,
           props: [],
@@ -137,7 +104,19 @@
       }
     },
     computed: {
-      ...mapGetters(['goodsList'])
+      ...mapGetters(['goodsList']),
+      isDesc() {
+        return this.searchParams.order.includes('desc');
+      },
+      isAsc() {
+        return this.searchParams.order.includes('asc');
+      },
+      isOne() {
+        return this.searchParams.order.includes('1');
+      },
+      isTwo() {
+        return this.searchParams.order.includes('2');
+      }
     },
     methods: {
       getData() {
@@ -159,6 +138,28 @@
       removeTrademark() {
         this.searchParams.trademark = undefined;
         this.getData();
+      },
+      attrInfo(attr, attrValue) {
+        let props = `${attr.attrId}:${attrValue}:${attr.attrName}`;
+        this.searchParams.props.push(props);
+        this.searchParams.props = [...new Set(this.searchParams.props)];
+        this.getData();
+      },
+      removeAttr(index) {
+        this.searchParams.props.splice(index, 1);
+        this.getData();
+      },
+      changeOrder(flag) {
+        let orgin = this.searchParams.order;
+        let orginType = orgin.split(':')[0];
+        if(flag !== orginType) {
+          this.searchParams.order = `${flag}:desc`;
+          return this.getData();
+        }
+      
+        let orginOrder = orgin.split(':')[1];
+        this.searchParams.order = `${orginType}:${orginOrder === 'desc' ? 'asc' : 'desc'}`; 
+        this.getData();
       }
     },
     watch: {
@@ -175,7 +176,6 @@
     },
     mounted() {
       this.getData();
-      this.$on('trademarkInfo', this.trademarkInfo);
     }
   }
 </script>

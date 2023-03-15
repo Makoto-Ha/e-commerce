@@ -12,11 +12,11 @@
         <a href="javascript:void(0);">更多</a>
       </div>
     </div>
-    <div class="type-wrap" v-for="attr in attrsList" :key="attr.attrId">
+    <div class="type-wrap" v-for="attr in attrsList" :key="attr.attrId" >
       <div class="fl key">{{ attr.attrName }}</div>
       <div class="fl value">
         <ul class="type-list">
-          <li v-for="(attrValue, index) in attr.attrValueList" :key="index">
+          <li v-for="(attrValue, index) in attr.attrValueList" :key="index" @click="attrInfo(attr, attrValue)">
             <a>{{ attrValue }}</a>
           </li>
         </ul>
@@ -36,6 +36,9 @@
     methods: {
       trademarkHandler(trademark) {
         this.$emit('trademarkInfo', trademark);
+      },
+      attrInfo(attr, attrValue) {
+        this.$emit('attrInfo', attr, attrValue);
       }
     }
   }
