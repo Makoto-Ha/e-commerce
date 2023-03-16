@@ -1,18 +1,14 @@
 <template>
   <div class="pagination">
-    <button>上一页</button>
-    <button>1</button>
-    <button>···</button>
+    <button @click="changePage(pageNo - 1)" :disabled="pageNo <= 1">上一页</button>
+    <button v-if="pageNo > 3" @click="changePage(1)">1</button>
+    <button v-if="pageNo > 4">···</button>
 
-    <button>3</button>
-    <button>4</button>
-    <button>5</button>
-    <button>6</button>
-    <button>7</button>
+    <button @click="changePage(number)" v-for="(number, index) in pageNumber.end" v-if="number >= pageNumber.start" :key="index" :class="{active: pageNo === number}">{{ number }}</button>
     
-    <button>···</button>
-    <button>9</button>
-    <button>下一页</button>
+    <button v-if="pageNo < totalPage - 3">···</button>
+    <button v-if="pageNo < totalPage - 2" @click="changePage(totalPage)">{{ totalPage }}</button>
+    <button @click="changePage(pageNo + 1)" :disabled="pageNo >= totalPage">下一页</button>
     
     <button style="margin-left: 30px">共 60 条</button>
   </div>
@@ -21,6 +17,42 @@
 <script>
   export default {
     name: "Pagination",
+    props: ['pageNo', 'pageSize', 'total', 'continues'],
+    computed: {
+      totalPage() {
+        return Math.ceil(this.total/this.pageSize);
+      },
+      pageNumber() {
+        let {pageNo, continues, totalPage} = this;
+        let start = 0, end = 0;
+        // 1 2 3 4 5
+        if(totalPage < continues) {
+          // 不正常情況
+          start = 1;
+          end = totalPage;
+        }else {
+          // 正常情況
+          start = pageNo - (continues - 1) / 2;
+          end = pageNo + (continues - 1) / 2;
+          // 小於2代表end只會是3個以下，會不符合continues要展示的個數，所以把end就要是continues
+          if(start < 2) {
+            end = continues;
+          }
+
+          if(end > totalPage) {
+            start = totalPage - continues + 1;
+            end = totalPage;
+          }
+        }
+
+        return {start, end};
+      }
+    },
+    methods: {
+      changePage(switchPageNum) {
+        this.$emit('changePage', switchPageNum);
+      }
+    }
   }
 </script>
 

@@ -29,3 +29,10 @@ export const reqGetSearchInfo = params => {
     data: params
   });
 };
+
+export const reqGoodsInfo = id => {
+  return requests({
+    url: `/item/${id}`,
+    method: 'get'
+  });
+}

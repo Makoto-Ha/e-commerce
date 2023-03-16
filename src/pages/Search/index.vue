@@ -41,15 +41,15 @@
               </ul>
             </div>
           </div>
+
           <div class="goods-list">
             <ul class="yui3-g">
-
               <li class="yui3-u-1-5" v-for="good in goodsList">
                 <div class="list-wrap">
                   <div class="p-img">
-                    <a href="item.html" target="_blank">
+                    <router-link :to="`/detail/${good.id}`">
                       <img :src="good.defaultImg" />
-                    </a>
+                    </router-link>
                   </div>
                   <div class="price">
                     <strong>
@@ -69,10 +69,10 @@
                   </div>
                 </div>
               </li>
-
             </ul>
           </div>
-          <Pagination/>
+
+          <Pagination :pageNo="searchParams.pageNo" :pageSize="searchParams.pageSize" :total="120" :continues="5" @changePage="changePage"/>
         </div>
       </div>
     </div>
@@ -159,6 +159,10 @@
       
         let orginOrder = orgin.split(':')[1];
         this.searchParams.order = `${orginType}:${orginOrder === 'desc' ? 'asc' : 'desc'}`; 
+        this.getData();
+      },
+      changePage(pageNumber) {
+        this.searchParams.pageNo = pageNumber;
         this.getData();
       }
     },
