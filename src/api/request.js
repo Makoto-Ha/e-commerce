@@ -1,4 +1,5 @@
 import axios from 'axios';
+import store from '@/store';
 import nprogress from 'nprogress';
 import 'nprogress/nprogress.css';
 
@@ -9,6 +10,9 @@ const requests = axios.create({
 
 requests.interceptors.request.use(config => {
   nprogress.start();
+  if(store.state.detail.uuid_token) {
+    config.headers.userTempId = store.state.detail.uuid_token;
+  }
   return config
 });
 

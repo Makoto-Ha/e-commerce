@@ -36,3 +36,17 @@ export const reqGoodsInfo = id => {
     method: 'get'
   });
 }
+
+export const reqAddOrUpdateShopCart = (id, skuNum) => {
+  return requests({
+    url: `/cart/addToCart/${id}/${skuNum}`,
+    method: 'post'
+  });
+} 
+
+export const reqCartList = () => {
+  return requests({
+    url: '/cart/cartList',
+    method: 'get'
+  });
+}

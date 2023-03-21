@@ -3,9 +3,26 @@ import Search from '@/pages/Search';
 import Login from '@/pages/Login';
 import Register from '@/pages/Register';
 import Detail from '@/pages/Detail';
-
+import AddCartSuccess from '@/pages/AddCartSuccess';
+import ShopCart from '@/pages/ShopCart';
 //配置路由
 export default [
+  {
+    path: '/shopcart',
+    name: 'shopcart',
+    component: ShopCart,
+    meta: {
+      show: true
+    }
+  },
+  {
+    path: '/addcartsuccess',
+    name: 'addcartsuccess',
+    component: AddCartSuccess,
+    meta: {
+      show: true
+    }
+  },
   {
     path: '/detail/:id',
     component: Detail,

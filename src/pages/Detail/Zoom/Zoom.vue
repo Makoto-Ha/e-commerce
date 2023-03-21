@@ -1,18 +1,51 @@
 <template>
-  <div class="spec-preview">
-    <img :src="skuDefaultImg" />
-    <div class="event"></div>
+  <div class="spec-preview" ref="container">
+    <img :src="imgObj.imgUrl" />
+    <div class="event" @mousemove="handler"></div>
     <div class="big">
-      <img src="../images/s1.png" />
+      <img :src="imgObj.imgUrl" ref="big" />
     </div>
-    <div class="mask"></div>
+    <div class="mask" ref="mask"></div>
   </div>
 </template>
 
 <script>
-  export default {
+export default {
     name: "Zoom",
-    props: ['skuDefaultImg']
+    data() {
+      return {
+        currentIndex: 0
+      }
+    },
+    props: ['skuImageList'],
+    computed: {
+      imgObj() {
+        return this.skuImageList[this.currentIndex] || {}
+      }
+    },
+    methods: {
+      handler(e) {
+        let mask = this.$refs.mask;
+        let big = this.$refs.big;
+        let container = this.$refs.container;
+        let left = e.offsetX - mask.offsetWidth/2;
+        let top = e.offsetY - mask.offsetHeight/2
+        mask.style.left = left + 'px';
+        mask.style.top = top + 'px';
+        if(e.offsetX < mask.offsetWidth/2) mask.style.left = 0;
+        if(e.offsetY < mask.offsetHeight/2) mask.style.top = 0;
+        if(e.offsetX > container.offsetWidth - mask.offsetWidth/2) mask.style.left = container.offsetWidth - mask.offsetWidth + 'px';
+        if(e.offsetY > container.offsetHeight - mask.offsetHeight/2) mask.style.top = container.offsetHeight - mask.offsetHeight + 'px';
+
+        big.style.left = -2*left+'px';
+        big.style.top = -2*top+'px';
+      }
+    },
+    mounted() {
+      this.$bus.$on('getIndex', index => {
+        this.currentIndex = index;
+      });
+    }
   }
 </script>
 
