@@ -50,3 +50,17 @@ export const reqCartList = () => {
     method: 'get'
   });
 }
+
+export const reqDeleteCartById = id => {
+  return requests({
+    url: `/cart/deleteCart/${id}`,
+    method: 'delete'
+  });
+}
+
+export const reqUpdateCheckedById = (id, isChecked) => {
+  return requests({
+    url: `/cart/checkCart/${id}/${isChecked}`,
+    method: 'get'
+  });
+}

@@ -17,13 +17,9 @@ const actions = {
     let response = await reqGoodsInfo(id);
     if(response.code === 200) commit('GETGOODSINFO', response.data);
   },
-  async addOrUpdateShopCart({commit}, {id, skuNum}) {
+  async addOrUpdateShopCart(_, {id, skuNum}) {
     let response = await reqAddOrUpdateShopCart(id, skuNum);
-    if(response.code === 200) {
-      return 'ok'
-    }else {
-      return Promise.reject(new Error('failed'));
-    }
+    return response.code === 200 ? 'ok' : Promise.reject(new Error('failed'));
   }
 }
 
