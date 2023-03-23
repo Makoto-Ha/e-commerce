@@ -64,3 +64,26 @@ export const reqUpdateCheckedById = (id, isChecked) => {
     method: 'get'
   });
 }
+
+export const reqGetCode = phone => {
+  return requests({
+    url: `/user/passport/sendCode/${phone}`,
+    method: 'get'
+  });
+}
+
+export const reqUserRegister = data => {
+  return requests({
+    url: `/user/passport/register`,
+    method: 'post',
+    data
+  });
+}
+
+export const reqUserLogin = data => {
+  return requests({
+    url: `/user/passport/login`,
+    method: 'post',
+    data
+  }); 
+}
