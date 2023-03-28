@@ -87,3 +87,17 @@ export const reqUserLogin = data => {
     data
   }); 
 }
+
+export const reqUserInfo = () => {
+  return requests({
+    url: `/user/passport/auth/getUserInfo`,
+    method: 'get'
+  });
+}
+
+export const reqLogout = () => {
+  return requests({
+    url: `/user/passport/logout`,
+    method: 'get'
+  });
+}

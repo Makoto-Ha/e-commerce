@@ -1,6 +1,8 @@
-import { reqGetCode, reqUserRegister,reqUserLogin } from "@/api";
+import { reqGetCode, reqUserRegister,reqUserLogin, reqUserInfo, reqLogout } from "@/api";
 const state = {
-  code: ''
+  code: '',
+  token: localStorage.getItem('TOKEN'),
+  userInfo: {}
 };
 const mutations = {
   GETCODE(state, code) {
@@ -8,6 +10,14 @@ const mutations = {
   },
   USERLOGIN(state, token) {
     state.token = token;
+  },
+  USERINFO(state, userInfo) {
+    state.userInfo = userInfo;
+  },
+  USERLOGOUT(state) {
+    state.token = '';
+    state.userInfo = {};
+    localStorage.setItem('TOKEN', '');
   }
 };
 const actions = {
@@ -29,12 +39,26 @@ const actions = {
     }
   },
   async userLogin({commit}, data) {
-    let response = await reqUserLogin(data);
-    commit('USERLOGIN', response.data?.token)
+    let response = await reqUserLogin(data);  
     if(response.code === 200) {
+      commit('USERLOGIN', response.data?.token)
+      localStorage.setItem('TOKEN', response.data?.token);
       return 'ok';
     }else {
       return Promise.reject(new Error('登入失敗'));
+    }
+  },
+  async getUserInfo({commit}) {
+    let response = await reqUserInfo();
+    if(response.code === 200) commit('USERINFO', response.data);
+  },
+  async userLogout({commit}) {
+    let response = await reqLogout();
+    if(response.code === 200) {
+      commit('USERLOGOUT');
+      return 'ok'
+    }else {
+      return Promise.reject(new Error('falied'));
     }
   }
 };
