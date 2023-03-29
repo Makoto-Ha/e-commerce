@@ -101,3 +101,32 @@ export const reqLogout = () => {
     method: 'get'
   });
 }
+
+export const reqAddressInfo = () => {
+  return requests({
+    url: `/user/userAddress/auth/findUserAddressList`,
+    method: 'get'
+  });
+}
+
+export const reqOrderInfo = () => {
+  return requests({
+    url: `/order/auth/trade`,
+    method: 'get'
+  });
+}
+
+export const reqSubmitOrder = (tradeNo, data) => {
+  return requests({
+    url: `/order/auth/submitOrder?tradeNo=${tradeNo}`,
+    method: 'post',
+    data
+  });
+}
+
+export const reqPayInfo = orderId => {
+  return requests({
+    url: `/payment/weixin/createNative/${orderId}`,
+    method: 'get'
+  });
+}
