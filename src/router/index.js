@@ -24,9 +24,15 @@ router.beforeEach(async (to, from, next) => {
       await store.dispatch('getUserInfo');
       return next();
     }
+  }else {
+    await store.dispatch('getUserInfo');
+    let toPath = to.path;
+    if(toPath.includes('/trade') || toPath.includes('/pay') || toPath.includes('/center')) {
+      return next(`/login?redirect=${toPath}`);
+    }
+    next();
   }
-  await store.dispatch('getUserInfo');
-  next();
+  
 });
 
 export default router;

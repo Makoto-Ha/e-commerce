@@ -83,11 +83,13 @@
 </template>
 
 <script>
+  import qrcode from 'qrcode';
   export default {
     name: 'Pay',
     data() {
       return {
-        payInfo: {}
+        payInfo: {},
+        timer: null
       }
     },
     computed: {
@@ -102,8 +104,9 @@
           this.payInfo = response.data; 
         }
       },
-      open() {
-        this.$alert('<strong>这是 <i>HTML</i> 片段</strong>', 'HTML 片段', {
+      async open() {
+        const QRCODE = await qrcode.toDataURL(this.payInfo.codeUrl);
+        this.$alert(`<img src=${QRCODE} />`, 'HTML 片段', {
           cancelButtonText: '支付遇見問題',
           confirmButtonText: '已支付成功',
           dangerouslyUseHTMLString: true,
@@ -112,9 +115,19 @@
           showCancelButton: true,
           showClose: false,
           lockScroll: false,
-          center: true
-        });
-        
+          center: true,
+          beforeClose: (type, instance, done) => {
+            if(type === 'canel') {
+              alert('請聯繫客服');
+              done();
+            }
+  
+            if(type === 'confirm') {
+              done();
+              this.$router.push('/paysuccess');
+            }       
+          }
+        });       
       }
     },
     mounted() {
